@@ -7,7 +7,7 @@ repositories {
 
 dependencies {
     compile group: 'javax.mail', name: 'mail', version: '1.4.1'
-    compile 'org.codehaus.groovy:groovy-all:2.4.5'
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
     testCompile 'junit:junit:4.12'
 }
 
@@ -18,10 +18,21 @@ sourceSets {
         }
     }
 
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+    }
+
     test {
         groovy {
             srcDirs = ['test/groovy']
         }
     }
 }
+
+//task runScript (dependsOn: 'classes', type: JavaExec) {
+//    main = 'appScript'
+//    classpath = sourceSets.main.runtimeClasspath
+//}
 

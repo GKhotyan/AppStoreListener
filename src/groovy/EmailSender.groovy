@@ -4,12 +4,12 @@ import javax.mail.internet.*
 class EmailSender {
     public void send() throws Exception {
 
-        def  d_email = "email@gmail.com",
-             d_uname = "email@gmail.com",
-             d_password = "password111",
+        def  d_email = "",
+             d_uname = "georgiy.hotiyan@gmail.com",
+             d_password = "w",
              d_host = "smtp.gmail.com",
              d_port  = "465", //465,587
-             m_to = "email@astrums.net",
+             m_to = "kraskovo@gmail.com",
              m_subject = "Testing",
              m_text = "Hey, this is the testing email."
 

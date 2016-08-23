@@ -5,6 +5,7 @@ class MyMain extends Script {
 
     @Override
     Object run() {
+        EmailSender emailSender = new EmailSender()
         println 'Hello'
     }
 }
