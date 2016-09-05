@@ -13,6 +13,7 @@ import java.util.concurrent.*;
 public class Manager {
     private static Properties props = new Properties();
     private static SendEmail sendEmail = new SendEmail();
+    private static PageParser pageParser = new PageParser();
 
     private static void init(){
         InputStream commonInput = null;
@@ -49,8 +50,7 @@ public class Manager {
 
                                                               for (AppItem appItem : appItemList) {
                                                                   try {
-                                                                      //вызываем парсер, который возвращает версию
-                                                                      String version = "2.2.2";
+                                                                      String version = pageParser.getVersion(appItem.getHttpPath());
                                                                       if (appItem.getVersion() == null) {
                                                                           appItem.setVersion(version);
                                                                           System.out.println(appItem.getName() + ". Version = " + appItem.getVersion());
