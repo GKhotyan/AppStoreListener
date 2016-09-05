@@ -2,6 +2,8 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'application'
 
+version = '1.0'
+
 repositories {
     mavenCentral()
 }
@@ -10,6 +12,8 @@ dependencies {
     compile group: 'javax.mail', name: 'mail', version: '1.4.1'
     compile 'org.codehaus.groovy:groovy-all:2.4.7'
     testCompile 'junit:junit:4.12'
+
+//    releaseJars group: 'javax.mail', name: 'mail', version: '1.4.1'
 }
 
 sourceSets {
@@ -37,13 +41,24 @@ sourceSets {
     }
 }
 
-version = '1.0'
 jar {
     manifest {
-        attributes 'Implementation-Title': 'AppStoreListener',
+        attributes 'Implementation-Title': project.name,
+                'Implementation-Version': version,
+                'Main-Class': 'Manager',
+                'Class-Path': configurations.compile.collect { it.getName() }.join(';')
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': project.name,
                 'Implementation-Version': version,
                 'Main-Class': 'Manager'
     }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 task runScript (dependsOn: 'classes', type: JavaExec) {

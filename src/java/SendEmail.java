@@ -11,16 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class SendEmail {
-    public void send(String application, String version) {
-        Properties props = new Properties();
-        InputStream commonInput = null;
-        InputStream privateInput = null;
-        try {
-
-            commonInput = this.getClass().getResourceAsStream("common.properties");
-            privateInput = this.getClass().getResourceAsStream("private.properties");
-            props.load(commonInput);
-            props.load(privateInput);
+    public void send(Properties props, String application, String version) throws MessagingException {
 
             Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
@@ -38,12 +29,5 @@ public class SendEmail {
 
             Transport.send(message);
 
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
