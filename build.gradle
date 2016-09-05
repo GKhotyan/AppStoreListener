@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'application'
 
 repositories {
     mavenCentral()
@@ -22,6 +23,11 @@ sourceSets {
         java {
             srcDirs = ['src/java']
         }
+        resources {
+            srcDir 'src/configs'
+            include '*.properties'
+            output.resourcesDir = 'build/classes/main'
+        }
     }
 
     test {
@@ -31,8 +37,17 @@ sourceSets {
     }
 }
 
-//task runScript (dependsOn: 'classes', type: JavaExec) {
-//    main = 'appScript'
-//    classpath = sourceSets.main.runtimeClasspath
-//}
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'AppStoreListener',
+                'Implementation-Version': version,
+                'Main-Class': 'Manager'
+    }
+}
+
+task runScript (dependsOn: 'classes', type: JavaExec) {
+    main = 'Manager'
+    classpath = sourceSets.main.runtimeClasspath
+}
 
