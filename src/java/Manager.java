@@ -62,7 +62,7 @@ public class Manager {
                                                                           sendEmail.send(props, appItem.getName(), appItem.getVersion());
                                                                           System.out.println(appItem.getName()+" have a new version "+ version);
                                                                       }
-                                                                      Thread.sleep(10000);
+                                                                      Thread.sleep(60000);
                                                                   } catch (InterruptedException ex){
                                                                       ex.printStackTrace();
                                                                   } catch (MessagingException e) {
@@ -73,7 +73,7 @@ public class Manager {
                                                       }
                                                   },
                         5,
-                        60,
+                        300,
                         TimeUnit.SECONDS);
     }
 }
