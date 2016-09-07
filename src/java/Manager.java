@@ -2,7 +2,10 @@ import javax.mail.MessagingException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
@@ -13,7 +16,7 @@ import java.util.concurrent.*;
 public class Manager {
     private static Properties props = new Properties();
     private static SendEmail sendEmail = new SendEmail();
-    private static PageParser pageParser = new PageParser();
+    private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
     private static void init(){
         InputStream commonInput = null;
@@ -31,7 +34,7 @@ public class Manager {
     }
 
     public static void main(String[] args){
-        System.out.println("Hello");
+        System.out.println("Hello!");
         init();
 
         List<AppItem> appItemList = new ArrayList<>();
@@ -40,6 +43,7 @@ public class Manager {
         appItemList.add(new AppItem("Delimobil", "https://itunes.apple.com/ru/app/delimobil/id1038254296"));
         appItemList.add(new AppItem("YouDrive", "https://itunes.apple.com/ru/app/youdrive/id989836024?l=en"));
         appItemList.add(new AppItem("BurgerKing", "https://itunes.apple.com/ru/app/burger-king-russia/id875569110"));
+        appItemList.add(new AppItem("Airbnb", "https://itunes.apple.com/ru/app/airbnb/id401626263"));
 
         ScheduledExecutorService scheduledExecutorService =
                 Executors.newSingleThreadScheduledExecutor();
@@ -50,22 +54,26 @@ public class Manager {
 
                                                               for (AppItem appItem : appItemList) {
                                                                   try {
+                                                                      PageParser pageParser = new PageParser();
                                                                       String version = pageParser.getVersion(appItem.getHttpPath());
                                                                       if (appItem.getVersion() == null) {
                                                                           appItem.setVersion(version);
-                                                                          System.out.println(appItem.getName() + ". Version = " + appItem.getVersion());
+                                                                          printWithTime(appItem.getName() + ". Version = " + appItem.getVersion());
                                                                       } else if(appItem.getVersion().equals(version)){
-                                                                          System.out.println("Ok. "+appItem.getName()+" still have version "+ version);
+                                                                          printWithTime("Ok. "+appItem.getName()+" still have version "+ version);
                                                                       } else if (version!=null&&!version.trim().equals("")){
-                                                                          System.out.println(appItem.getName()+" have a new version "+ version);
+                                                                          printWithTime(appItem.getName()+" have a new version "+ version);
+                                                                          sendEmail.send(props, appItem.getName(), appItem.getVersion(), version);
                                                                           appItem.setVersion(version);
-                                                                          sendEmail.send(props, appItem.getName(), appItem.getVersion());
-                                                                          System.out.println(appItem.getName()+" have a new version "+ version);
                                                                       }
                                                                       Thread.sleep(60000);
                                                                   } catch (InterruptedException ex){
                                                                       ex.printStackTrace();
                                                                   } catch (MessagingException e) {
+                                                                      printWithTime("Something wrong with the email. "+e.getMessage());
+                                                                      e.printStackTrace();
+                                                                  } catch (IOException e) {
+                                                                      printWithTime(appItem.getName() + " have a problem with url connection. "+e.getMessage());
                                                                       e.printStackTrace();
                                                                   }
                                                               }
@@ -73,7 +81,11 @@ public class Manager {
                                                       }
                                                   },
                         5,
-                        300,
+                        600,
                         TimeUnit.SECONDS);
+    }
+
+    private static void printWithTime(String message){
+        System.out.println(dateFormat.format(Calendar.getInstance().getTime())+" - "+message);
     }
 }

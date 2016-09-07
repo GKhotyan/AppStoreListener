@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class SendEmail {
-    public void send(Properties props, String application, String version) throws MessagingException {
+    public void send(Properties props, String application, String oldVersion, String newVersion) throws MessagingException {
 
             Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
@@ -24,8 +24,8 @@ public class SendEmail {
             message.setFrom(new InternetAddress(props.getProperty("mail.login.from")));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(props.getProperty("mail.list.to")));
-            message.setSubject(application+" got a new version "+version);
-            message.setText("Refresh it quickly!");
+            message.setSubject(application+" got a new version "+newVersion);
+            message.setText(application+" version changed from "+oldVersion+" to "+newVersion+". Refresh it quickly!");
 
             Transport.send(message);
 

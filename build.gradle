@@ -13,8 +13,6 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.1'
     compile 'org.codehaus.groovy:groovy-all:2.4.7'
     testCompile 'junit:junit:4.12'
-
-//    releaseJars group: 'javax.mail', name: 'mail', version: '1.4.1'
 }
 
 sourceSets {
@@ -42,12 +40,15 @@ sourceSets {
     }
 }
 
+sourceSets.main.java.srcDirs = []
+sourceSets.main.groovy.srcDirs = ["src/java", "src/groovy"]
+
 jar {
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': version,
-                'Main-Class': 'Manager',
-                'Class-Path': configurations.compile.collect { it.getName() }.join(';')
+                'Main-Class': 'Manager'
+//                'Class-Path': configurations.compile.collect { it.getName() }.join(';')
     }
 }
 
