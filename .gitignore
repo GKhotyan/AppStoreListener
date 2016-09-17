@@ -4,3 +4,7 @@
 src/configs/private.properties
 .gradle/
 build/
+/src/main/resources/private.properties
+AppStoreListener.ipr
+AppStoreListener.iws
+src/main/resources/private.properties
