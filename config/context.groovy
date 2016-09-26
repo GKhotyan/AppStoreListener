@@ -1,8 +1,11 @@
-import org.springframework.core.io.ClassPathResource
+package common
+
+import ClassPathResource
 
 def properties = new Properties()
 properties.load(new ClassPathResource('common.properties').inputStream);
 properties.load(new ClassPathResource('private.properties').inputStream);
+
 
 beans {
     foo String, 'hello'

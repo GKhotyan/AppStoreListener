@@ -1,8 +1,18 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
+
 apply plugin: 'base'
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'application'
 apply plugin: 'idea'
+apply plugin: 'spring-boot'
 
 version = '1.0'
 
@@ -23,13 +33,16 @@ ext {
 }
 
 dependencies {
+//    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+
+
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
     compile 'com.github.pengrad:java-telegram-bot-api:2.1.1'
 
     compile "org.springframework:spring-context:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile 'org.springframework.data:spring-data-mongodb:1.9.2.RELEASE'
-//    compile("org.springframework.boot:spring-boot-starter")
+    compile 'org.springframework.boot:spring-boot-starter:1.4.1.RELEASE'
     compile group: 'javax.mail', name: 'mail', version: '1.4.1'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.1'
     compile group: 'log4j', name: 'log4j', version: '1.2.16'
@@ -69,7 +82,7 @@ jar {
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': version,
-                'Main-Class': 'Manager'
+                'Main-Class': 'common.Application'
 //                'Class-Path': configurations.compile.collect { it.getName() }.join(';')
     }
 }
@@ -78,15 +91,15 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': version,
-                'Main-Class': 'Manager'
+                'Main-Class': 'common.Application'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
-task runScript (dependsOn: 'classes', type: JavaExec) {
-    main = 'Manager'
-    classpath = sourceSets.main.runtimeClasspath
-}
+//task runScript (dependsOn: 'classes', type: JavaExec) {
+//    main = 'Manager'
+//    classpath = sourceSets.main.runtimeClasspath
+//}
 
