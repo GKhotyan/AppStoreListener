@@ -8,14 +8,11 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ImportResource("classpath:/context.groovy")
+@ImportResource("file:config/context.groovy")
 @EnableScheduling
 public class Application {
-    @Autowired
-    private static ApplicationContext context;
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class);
-        System.out.println("emailSender "+ context.containsBean("emailSender"));
     }
 }

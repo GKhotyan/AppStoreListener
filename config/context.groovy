@@ -1,6 +1,6 @@
 package common
 
-import ClassPathResource
+import org.springframework.core.io.ClassPathResource
 
 def properties = new Properties()
 properties.load(new ClassPathResource('common.properties').inputStream);
