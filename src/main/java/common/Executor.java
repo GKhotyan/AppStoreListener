@@ -1,11 +1,10 @@
 package common;
 
 import components.AppItem;
-import utils.MessageSender;
 import org.springframework.stereotype.Component;
+import utils.MessageSender;
 import utils.PageParser;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -50,8 +49,7 @@ public class Executor {
                                                                       } else if (version!=null&&!version.trim().equals("")){
                                                                           printWithTime(appItem.getName()+" have a new version "+ version);
 
-                                                                          String result = getMessageSender().send(appItem.getName()+" got new version "+version ,
-                                                                                  appItem.getName()+" version changed from "+appItem.getVersion()+" to "+version);
+                                                                          String result = getMessageSender().send(appItem.getName()+" version changed from "+appItem.getVersion()+" to "+version);
                                                                           if(RESULT_SUCCESS.equals(result))
                                                                             appItem.setVersion(version);
                                                                       }

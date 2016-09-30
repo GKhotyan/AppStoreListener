@@ -1,10 +1,8 @@
 import common.Executor;
-import common.Launcher;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericGroovyApplicationContext;
 import common.ScheduledTasks;
-import utils.MessageSender;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;

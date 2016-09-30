@@ -1,9 +1,6 @@
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericGroovyApplicationContext;
-import utils.MessageSender;
-
-import javax.mail.MessagingException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;

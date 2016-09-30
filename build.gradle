@@ -33,21 +33,22 @@ ext {
 }
 
 dependencies {
-//    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
-
+    compile group: 'org.mongeez', name: 'mongeez', version: '0.9.3'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
     compile 'com.github.pengrad:java-telegram-bot-api:2.1.1'
 
     compile "org.springframework:spring-context:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
-    compile 'org.springframework.data:spring-data-mongodb:1.9.2.RELEASE'
     compile 'org.springframework.boot:spring-boot-starter:1.4.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '1.4.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.1.RELEASE'
+
     compile group: 'javax.mail', name: 'mail', version: '1.4.1'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.1'
     compile group: 'log4j', name: 'log4j', version: '1.2.16'
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
-    testCompile "junit:junit:$junitVersion"
 }
 
 sourceSets {
@@ -64,6 +65,7 @@ sourceSets {
         resources {
             srcDir 'src/main/resources'
             include '*.properties'
+            include '*.yml'
             output.resourcesDir = 'build/classes/main'
         }
     }

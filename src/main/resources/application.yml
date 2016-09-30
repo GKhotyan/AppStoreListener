@@ -1,0 +1,18 @@
+#spring.profiles.default: local
+
+spring.data.mongodb:
+  database: applistener
+  uri: mongodb://localhost:27017
+
+spring:
+  mail:
+      host: smtp.gmail.com
+      port: 465
+      username:
+      password:
+      properties.mail.smtp:
+        auth: true
+        socketFactory:
+          port: 465
+          class: javax.net.ssl.SSLSocketFactory
+          fallback: false
