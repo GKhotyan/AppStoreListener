@@ -6,8 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "simpleEntities")
 public class SimpleEntity {
     @Id
-    private
-    int id;
+    private int id;
     private String text;
 
     public SimpleEntity(){}

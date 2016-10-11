@@ -1,0 +1,14 @@
+<mongoChangeLog>
+    <changeSet changeId="ChangeSet-1" author="gkhotyan">
+        <script>
+            db.application_info.insert({
+            "name" : "Uber", "url" : "https://itunes.apple.com/ru/app/uber-lucse-cem-taksi/id368677368"});
+            db.application_info.insert({
+            "name" : "Gett", "url" : "https://itunes.apple.com/ru/app/gett-gettaxi-zakaz-taksi-onlajn/id449655162"});
+            db.application_info.insert({
+            "name" : "Delimobil", "url" : "https://itunes.apple.com/ru/app/delimobil/id1038254296"});
+            db.application_info.insert({
+            "name" : "YouDrive", "url" : "https://itunes.apple.com/ru/app/youdrive/id989836024?l=en"});
+        </script>
+    </changeSet>
+</mongoChangeLog>
