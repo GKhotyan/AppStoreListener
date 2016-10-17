@@ -11,10 +11,14 @@ import java.util.List;
 
 @Repository
 @EnableAutoConfiguration
-public interface IMongoApplicationInfoRepository extends MongoRepository<ApplicationInfo, BigInteger> {
+public interface ApplicationInfoRepository extends MongoRepository<ApplicationInfo, BigInteger>,
+        CustomApplicationInfoRepository
+{
 
     List<ApplicationInfo> findByName(String name);
 
     @Query("{name : ?0}")
     public ApplicationInfo findByNameQuery(String name);
+
+
 }
