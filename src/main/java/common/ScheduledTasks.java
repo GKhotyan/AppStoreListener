@@ -95,6 +95,9 @@ public class ScheduledTasks {
                     //send to Telegram
                     telegramSender.send(appItem.getName()+" have a new version "+ version);
 
+                    //refresh appList
+                    applicationInfoList = repository.findAll();
+
                     //send to Email(s)
 //                    sendEmail(appItem.getName()+" version changed to "+version);
 

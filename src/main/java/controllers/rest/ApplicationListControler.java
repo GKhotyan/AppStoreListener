@@ -1,4 +1,4 @@
-package controllers;
+package controllers.rest;
 
 import db.entities.ApplicationInfo;
 import db.repositories.ApplicationInfoRepository;
@@ -16,7 +16,12 @@ public class ApplicationListControler {
     ApplicationInfoRepository repository;
 
     @RequestMapping(method = RequestMethod.GET)
-    List<ApplicationInfo> findAll() {
+    public List<ApplicationInfo> findAll() {
         return repository.findAll();
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public void insert(ApplicationInfo applicationInfo) {
+        repository.save(applicationInfo);
     }
 }
