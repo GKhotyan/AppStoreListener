@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ImportResource("file:config/context.groovy")
+@ImportResource("classpath:/config/context.groovy")
 @PropertySources({
         @PropertySource("classpath:application.yml"),
         @PropertySource("classpath:private.yml")

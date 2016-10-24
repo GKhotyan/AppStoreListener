@@ -9,6 +9,7 @@ And this program helps me to try some new technologies and approaches:
 - MongoDB
 - Jsoup
 - yml-properties
+- gradle
 - And internal libraries for: 
     - Telegram API 
     - MongoDB initialization 

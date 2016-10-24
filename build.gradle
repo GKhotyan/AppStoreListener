@@ -70,6 +70,7 @@ sourceSets {
         resources {
             srcDir 'src/main/resources'
             include '*.properties'
+            include '**/*.groovy'
             include '*.yml'
             include '**/*.xml'
             include '**/*.jsp'
