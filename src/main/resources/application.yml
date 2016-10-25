@@ -1,8 +1,15 @@
-#spring.profiles.default: local
+logging:
+  level:
+    common: INFO
+  file: logs/app.log
+  pattern:
+#     console: "%d %-5level %logger : %msg%n"
+     file: "%d %-5level [%thread] %logger : %msg%n"
 
 spring.data.mongodb:
   database: applistener3
   uri: mongodb://localhost:27017
+
 
 spring:
   mail:
@@ -16,3 +23,4 @@ spring:
           port: 465
           class: javax.net.ssl.SSLSocketFactory
           fallback: false
+

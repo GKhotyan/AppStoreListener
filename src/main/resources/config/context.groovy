@@ -25,4 +25,5 @@ beans {
             mongoURI: mongoURI,
             mongeez: mongeez
     )
+
 }

@@ -1,9 +1,6 @@
 package common;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -59,18 +56,20 @@ public class ScheduledTasks {
 //    @Value("classpath:mongeez/mongeez.xml")
 //    private Resource res;
 
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
-    private static DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     List<ApplicationInfo> applicationInfoList;
 
     @PostConstruct
     public void initialization() {
+        log.info("Initialization");
+
+        //Mongeez remembers its actions and executes only new scripts,
+        //so, we shouldn't worry about duplications
+        mongeez.setMongo(new Mongo(mongoURI));
+        mongeez.process();
+
         applicationInfoList = repository.findAll();
-        if(applicationInfoList.size()==0){
-            mongeez.setMongo(new Mongo(mongoURI));
-            mongeez.process();
-        }
     }
 
     @Scheduled(cron="0 0/5 6-23,0 * * MON-SAT")
@@ -84,32 +83,33 @@ public class ScheduledTasks {
                 String version = getPageParser().getVersionFromHtmlByUrl(appItem.getUrl());
                 if (appItem.getVersions()==null || appItem.getVersions().size() == 0) {
                     repository.pushVersion(appItem.getId(), version);
-                    printWithTime(appItem.getName() + ". Version = " + version);
+                    log.info(appItem.getName() + ". Version = " + version);
+                    log.info(appItem.getName() + ". Version = " + version);
+                    //refresh appList
+                    applicationInfoList = repository.findAll();
                 } else if(appItem.getVersions().size()>0 &&
                         appItem.getVersions().contains(version)){
-                    printWithTime("Ok. "+appItem.getName()+" still have version "+ version);
+                    log.info("Ok. "+appItem.getName()+" still have version "+ version);
                 } else if (StringUtils.hasText(version)){
                     repository.pushVersion(appItem.getId(), version);
-                    printWithTime(appItem.getName()+" have a new version "+ version);
+                    log.info(appItem.getName()+" have a new version "+ version);
 
                     //send to Telegram
                     telegramSender.send(appItem.getName()+" have a new version "+ version);
 
+                    //send to Email(s)
+                    sendEmail(appItem.getName()+" version changed to "+version);
+
                     //refresh appList
                     applicationInfoList = repository.findAll();
-
-                    //send to Email(s)
-//                    sendEmail(appItem.getName()+" version changed to "+version);
-
                 }
 
                 int randomPeriod = ThreadLocalRandom.current().nextInt(0, 1000);
                 Thread.sleep(5000+randomPeriod);
             } catch (InterruptedException ex){
-                ex.printStackTrace();
+                log.error(appItem.getName() + " have a problem with concurrency. "+ex.getMessage());
             } catch (IOException e) {
-                printWithTime(appItem.getName() + " have a problem with url connection. "+e.getMessage());
-                e.printStackTrace();
+                log.error(appItem.getName() + " have a problem with url connection. "+e.getMessage());
             }
         }
     }
@@ -125,10 +125,6 @@ public class ScheduledTasks {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-    }
-
-    private static void printWithTime(String message){
-        System.out.println(dateFormat.format(Calendar.getInstance().getTime())+" - "+message);
     }
 
     public PageParser getPageParser() {
@@ -162,4 +158,5 @@ public class ScheduledTasks {
     public void setMongoURI(MongoURI mongoURI) {
         this.mongoURI = mongoURI;
     }
+
 }
