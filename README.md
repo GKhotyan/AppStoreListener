@@ -10,6 +10,7 @@ And this program helps me to try some new technologies and approaches:
 - Jsoup
 - yml-properties
 - gradle
+- scheduled tasks
 - And internal libraries for: 
     - Telegram API 
     - MongoDB initialization 
