@@ -1,3 +1,5 @@
+package context;
+
 import com.mongodb.MongoURI;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;

@@ -11,4 +11,22 @@
             "name" : "YouDrive", "url" : "https://itunes.apple.com/ru/app/youdrive/id989836024?l=en"});
         </script>
     </changeSet>
+    <changeSet changeId="ChangeSet-3" author="gkhotyan">
+        <script>
+            db.application_info.insert({
+            "name" : "BelkaCar", "url" : "https://itunes.apple.com/ru/app/apple-store/id1113709902"});
+        </script>
+    </changeSet>
+    <changeSet changeId="ChangeSet-5" author="gkhotyan">
+        <script>
+            db.application_info_android.insert({
+            "name" : "Uber Android", "url" : "https://play.google.com/store/apps/details?id=com.ubercab"});
+            db.application_info_android.insert({
+            "name" : "Gett Android", "url" : "https://play.google.com/store/apps/details?id=com.gettaxi.android"});
+            db.application_info_android.insert({
+            "name" : "BelkaCar Android", "url" : "https://play.google.com/store/apps/details?id=ru.belkacar.belkacar"});
+            db.application_info_android.insert({
+            "name" : "YouDrive Android", "url" : "https://play.google.com/store/apps/details?id=youdrive.today"});
+        </script>
+    </changeSet>
 </mongoChangeLog>

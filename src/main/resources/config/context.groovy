@@ -1,5 +1,6 @@
 package config
 
+import factories.PageParserBeanFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
@@ -19,11 +20,12 @@ beans {
             file: mongeezConfig,
             dbName: config.spring.data.mongodb.database)
 
-    jsoupPageParser(utils.JsoupPageParser)
+    pageParserBeanFactory(PageParserBeanFactory)
     scheduledTasks(common.ScheduledTasks,
-            pageParser: jsoupPageParser,
+            pageParserBeanFactory: pageParserBeanFactory,
             mongoURI: mongoURI,
             mongeez: mongeez
     )
+    configObject(ConfigObject)
 
 }

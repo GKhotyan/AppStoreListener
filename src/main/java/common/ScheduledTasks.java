@@ -1,12 +1,18 @@
 package common;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.mongodb.*;
-import db.entities.ApplicationInfo;
+import db.entities.PlayStoreApplicationInfo;
+import db.entities.BaseApplicationInfo;
+import db.entities.AppStoreApplicationInfo;
 import db.repositories.ApplicationInfoRepository;
+import db.repositories.PlayStoreApplicationInfoRepository;
+import db.repositories.AppStoreApplicationInfoRepository;
+import factories.PageParserBeanFactory;
 import org.mongeez.Mongeez;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +27,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import utils.MessageSender;
-import utils.PageParser;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
@@ -30,13 +35,16 @@ import javax.mail.internet.MimeMessage;
 @EnableScheduling
 @Component
 public class ScheduledTasks {
-    private PageParser pageParser;
+    private PageParserBeanFactory pageParserBeanFactory;
     private Resource resource;
     private Mongeez mongeez;
     private MongoURI mongoURI;
 
     @Autowired
-    ApplicationInfoRepository repository;
+    AppStoreApplicationInfoRepository appStoreRepository;
+
+    @Autowired
+    PlayStoreApplicationInfoRepository playStoreRepository;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -58,7 +66,8 @@ public class ScheduledTasks {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    List<ApplicationInfo> applicationInfoList;
+    List<AppStoreApplicationInfo> appStoreApplicationInfoList;
+    List<PlayStoreApplicationInfo> playStoreApplicationInfoList;
 
     @PostConstruct
     public void initialization() {
@@ -69,48 +78,80 @@ public class ScheduledTasks {
         mongeez.setMongo(new Mongo(mongoURI));
         mongeez.process();
 
-        applicationInfoList = repository.findAll();
+        appStoreApplicationInfoList = appStoreRepository.findAll();
+        playStoreApplicationInfoList = playStoreRepository.findAll();
     }
 
     @Scheduled(cron="0 0/5 6-23,0 * * MON-SAT")
-    public void reportCurrentTime() {
-        if(applicationInfoList.size()==0){
-            applicationInfoList = repository.findAll();
+    public void appStoreSchedule() {
+        if(appStoreApplicationInfoList.size()==0){
+            appStoreApplicationInfoList = appStoreRepository.findAll();
         }
 
-        for (ApplicationInfo appItem : applicationInfoList) {
-            try {
-                String version = getPageParser().getVersionFromHtmlByUrl(appItem.getUrl());
-                if (appItem.getVersions()==null || appItem.getVersions().size() == 0) {
-                    repository.pushVersion(appItem.getId(), version);
-                    log.info(appItem.getName() + ". Version = " + version);
-                    log.info(appItem.getName() + ". Version = " + version);
-                    //refresh appList
-                    applicationInfoList = repository.findAll();
-                } else if(appItem.getVersions().size()>0 &&
-                        appItem.getVersions().contains(version)){
-                    log.info("Ok. "+appItem.getName()+" still have version "+ version);
-                } else if (StringUtils.hasText(version)){
-                    repository.pushVersion(appItem.getId(), version);
-                    log.info(appItem.getName()+" have a new version "+ version);
+        for (BaseApplicationInfo appItem : appStoreApplicationInfoList) {
+            checkForNewVersion(appStoreRepository, appItem, true);
+        }
 
-                    //send to Telegram
-                    telegramSender.send(appItem.getName()+" have a new version "+ version);
+        //refresh appList
+        appStoreApplicationInfoList = appStoreRepository.findAll();
+    }
 
-                    //send to Email(s)
-                    sendEmail(appItem.getName()+" version changed to "+version);
+    @Scheduled(cron="0 0/2 6-23,0 * * MON-SAT")
+    public void playStoreSchedule() {
+        if(playStoreApplicationInfoList.size()==0){
+            playStoreApplicationInfoList = playStoreRepository.findAll();
+        }
 
-                    //refresh appList
-                    applicationInfoList = repository.findAll();
+        for (BaseApplicationInfo appItem : playStoreApplicationInfoList) {
+            checkForNewVersion(playStoreRepository, appItem, false);
+        }
+
+        //refresh appList
+        playStoreApplicationInfoList = playStoreRepository.findAll();
+    }
+
+    private void checkForNewVersion(ApplicationInfoRepository repository,
+                                    BaseApplicationInfo appItem, boolean sendEmail) {
+        try {
+            String version = getPageParserBeanFactory().getPageParser(appItem).getVersionFromHtmlByUrl(appItem.getUrl());
+            if (appItem.getVersions()==null || appItem.getVersions().size() == 0) {
+                repository.pushVersion(appItem.getId(), version);
+                List<String> versionsList = new ArrayList<>();
+                versionsList.add(version);
+                appItem.setVersions(versionsList);
+                log.info(appItem.getName() + ". Version = " + version);
+
+                //send to Telegram
+                getTelegramSender().send(appItem.getName()+" have a new version "+ version);
+
+                //send to Email(s)
+                if(sendEmail) {
+                    sendEmail(appItem.getName() + " version changed to " + version);
                 }
+            } else if(appItem.getVersions().size()>0 &&
+                    appItem.getVersions().contains(version)){
+                log.info("Ok. "+appItem.getName()+" still have version "+ version);
+            } else if (StringUtils.hasText(version) && appItem.getVersions().size()>0 &&
+                    !appItem.getVersions().contains(version)){
+                repository.pushVersion(appItem.getId(), version);
+                appItem.getVersions().add(version);
+                log.info(appItem.getName()+" have a new version "+ version);
 
-                int randomPeriod = ThreadLocalRandom.current().nextInt(0, 1000);
-                Thread.sleep(5000+randomPeriod);
-            } catch (InterruptedException ex){
-                log.error(appItem.getName() + " have a problem with concurrency. "+ex.getMessage());
-            } catch (IOException e) {
-                log.error(appItem.getName() + " have a problem with url connection. "+e.getMessage());
+                //send to Telegram
+                getTelegramSender().send(appItem.getName()+" have a new version "+ version);
+
+                //send to Email(s)
+                if(sendEmail) {
+                    sendEmail(appItem.getName() + " version changed to " + version);
+                }
             }
+
+            int randomPeriod = ThreadLocalRandom.current().nextInt(0, 1000);
+            Thread.sleep(5000+randomPeriod);
+        } catch (InterruptedException ex){
+            log.error(appItem.getName() + " have a problem with concurrency. "+ex.getMessage());
+        } catch (IOException e) {
+            log.error(appItem.getName() + " have a problem with url connection. "+e.getMessage());
         }
     }
 
@@ -123,16 +164,10 @@ public class ScheduledTasks {
             helper.setText(message);
             javaMailSender.send(mail);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.error("Mail sending error", e);
+        } catch (org.springframework.mail.MailAuthenticationException e){
+            log.error("Mail sending authentication error", e);
         }
-    }
-
-    public PageParser getPageParser() {
-        return pageParser;
-    }
-
-    public void setPageParser(PageParser pageParser) {
-        this.pageParser = pageParser;
     }
 
     public Resource getResource() {
@@ -159,4 +194,19 @@ public class ScheduledTasks {
         this.mongoURI = mongoURI;
     }
 
+    public MessageSender getTelegramSender() {
+        return telegramSender;
+    }
+
+    public void setTelegramSender(MessageSender telegramSender) {
+        this.telegramSender = telegramSender;
+    }
+
+    public PageParserBeanFactory getPageParserBeanFactory() {
+        return pageParserBeanFactory;
+    }
+
+    public void setPageParserBeanFactory(PageParserBeanFactory pageParserBeanFactory) {
+        this.pageParserBeanFactory = pageParserBeanFactory;
+    }
 }

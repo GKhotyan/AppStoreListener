@@ -1,8 +1,8 @@
 package controllers.web;
 
 import controllers.data.ApplicationInfoData;
-import db.entities.ApplicationInfo;
-import db.repositories.ApplicationInfoRepository;
+import db.entities.AppStoreApplicationInfo;
+import db.repositories.AppStoreApplicationInfoRepository;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class ApplicationListWebController {
+public class AppStoreApplicationListWebController {
     @Autowired
-    ApplicationInfoRepository repository;
+    AppStoreApplicationInfoRepository repository;
 
     @RequestMapping("/applicationList")
     public String getApplicatinList(Model model){
-        List<ApplicationInfo> applicationInfoList = repository.findAll();
+        List<AppStoreApplicationInfo> applicationInfoList = repository.findAll();
         List<ApplicationInfoData> applicationInfoDataList = new ArrayList<ApplicationInfoData>();
-        for(ApplicationInfo applicationInfo : applicationInfoList) {
+        for(AppStoreApplicationInfo applicationInfo : applicationInfoList) {
             ApplicationInfoData applicationInfoData = new ApplicationInfoData();
             applicationInfoData.setName(applicationInfo.getName());
             applicationInfoData.setUrl(applicationInfo.getUrl());

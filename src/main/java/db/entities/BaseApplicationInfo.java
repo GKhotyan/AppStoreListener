@@ -5,12 +5,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "application_info")
-public class ApplicationInfo {
+//@Document
+abstract public class BaseApplicationInfo {
     @Id
-    private String id;
-    private String name;
-    private String url;
+    protected String id;
+    protected String name;
+    protected String url;
     private List<String> versions;
 
     public String getId() {
