@@ -13,4 +13,4 @@ And this program helps me to try some new technologies and approaches:
 - scheduled tasks
 - And internal libraries for: 
     - Telegram API 
-    - MongoDB initialization 
+    - MongoDB initialization, testing 
