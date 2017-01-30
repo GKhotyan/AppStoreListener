@@ -89,7 +89,7 @@ public class ScheduledTasks {
         }
 
         for (BaseApplicationInfo appItem : appStoreApplicationInfoList) {
-            checkForNewVersion(appStoreRepository, appItem, true);
+            checkForNewVersion(appStoreRepository, appItem, false);
         }
 
         //refresh appList
