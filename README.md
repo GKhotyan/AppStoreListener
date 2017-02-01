@@ -4,12 +4,13 @@ This program makes recurrent calls of the PlayStore application pages, parses th
 All this changes are stored in database.  
 And this program helps me to try some new technologies and approaches:
 - Spring Boot
-- groovy config
-- Spring-data
+- AngularJS
 - MongoDB
+- Spring-data
+- gradle
+- groovy config
 - Jsoup
 - yml-properties
-- gradle
 - scheduled tasks
 - And internal libraries for: 
     - Telegram API 

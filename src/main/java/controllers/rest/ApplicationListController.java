@@ -7,11 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/applications")
-public class ApplicationListControler {
+@RequestMapping("/application")
+public class ApplicationListController {
     @Autowired
     AppStoreApplicationInfoRepository repository;
 
@@ -20,9 +21,20 @@ public class ApplicationListControler {
         return repository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public AppStoreApplicationInfo getApplication(@PathVariable("id") BigInteger id) {
+        return repository.findOne(id);
+    }
+
     @PostMapping
     public ResponseEntity  createApplication(@RequestBody AppStoreApplicationInfo applicationInfo) {
         repository.save(applicationInfo);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity  deleteApplication(@PathVariable("id") BigInteger id) {
+        repository.delete(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 

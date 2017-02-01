@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AppStoreApplicationInfoRepositoryIntegrationTest {
@@ -79,7 +80,7 @@ public class AppStoreApplicationInfoRepositoryIntegrationTest {
         int samplesInCollection = template.findAll(AppStoreApplicationInfo.class).size();
 
         assertEquals("Only 1 Sample should exist in collection, but there are "
-                + samplesInCollection, 1, samplesInCollection);
+                     + samplesInCollection, 1, samplesInCollection);
     }
 
     @Test

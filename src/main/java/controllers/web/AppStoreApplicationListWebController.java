@@ -34,6 +34,6 @@ public class AppStoreApplicationListWebController {
         }
         model.addAttribute("applicationList", applicationInfoDataList);
 
-        return "/applicationListPage.jsp";
+        return "applicationListPage";
     }
 }

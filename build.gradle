@@ -48,6 +48,8 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.1.RELEASE'
+    compile("org.springframework.boot:spring-boot-starter-security")
+
     compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.6'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
     compile group: 'org.apache.maven', name: 'maven-artifact', version: '3.3.9'
@@ -76,6 +78,7 @@ sourceSets {
             include '*.yml'
             include '**/*.xml'
             include '**/*.jsp'
+            include '**/*.js'
             output.resourcesDir = 'build/classes/main'
         }
     }
