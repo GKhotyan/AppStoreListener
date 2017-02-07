@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-group = 'springio'
+group = 'gkhotyan'
 
 apply plugin: 'base'
 apply plugin: 'java'
@@ -40,6 +40,7 @@ dependencies {
     compile group: 'org.mongeez', name: 'mongeez', version: '0.9.6'
 
     compile 'com.github.pengrad:java-telegram-bot-api:2.1.1'
+    compile 'org.springframework.retry:spring-retry:1.2.0.RELEASE'
 
     compile "org.springframework:spring-context:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
@@ -48,14 +49,25 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.1.RELEASE'
+
+//    compile group: 'org.springframework', name: 'spring-aop', version: '4.3.6.RELEASE'
+//    compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
+    compile group: 'aspectj', name: 'aspectjrt', version: '1.5.4'
+    compile group: 'aspectj', name: 'aspectjweaver', version: '1.5.4'
+
     compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.5.6'
     compile group: 'javax.servlet', name: 'jstl', version: '1.2'
     compile group: 'org.apache.maven', name: 'maven-artifact', version: '3.3.9'
     compile group: 'javax.mail', name: 'mail', version: '1.4.1'
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.1'
+
+
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
     testCompile group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '1.50.5'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.6.2'
+
 }
 
 sourceSets {
@@ -91,6 +103,8 @@ sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs = ["src/main/java", "src/main/groovy"]
 
 jar {
+    baseName = 'gs-spring-boot-docker'
+    version =  '0.1.0'
     manifest {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': version,

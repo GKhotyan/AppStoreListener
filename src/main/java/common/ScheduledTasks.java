@@ -150,7 +150,7 @@ public class ScheduledTasks {
             Thread.sleep(5000+randomPeriod);
         } catch (InterruptedException ex){
             log.error(appItem.getName() + " have a problem with concurrency. "+ex.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error(appItem.getName() + " have a problem with url connection. "+e.getMessage());
         }
     }
