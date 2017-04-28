@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.mongodb.*;
-import db.entities.PlayStoreApplicationInfo;
+
 import db.entities.BaseApplicationInfo;
 import db.entities.AppStoreApplicationInfo;
 import db.repositories.ApplicationInfoRepository;
 import db.repositories.PlayStoreApplicationInfoRepository;
 import db.repositories.AppStoreApplicationInfoRepository;
+import events.NewVersionEventProducer;
 import factories.PageParserBeanFactory;
 import org.mongeez.Mongeez;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -41,10 +43,16 @@ public class ScheduledTasks {
     private MongoURI mongoURI;
 
     @Autowired
+    NewVersionEventProducer newVersionEventProducer;
+
+    @Autowired
     AppStoreApplicationInfoRepository appStoreRepository;
 
     @Autowired
     PlayStoreApplicationInfoRepository playStoreRepository;
+
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -67,11 +75,12 @@ public class ScheduledTasks {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     List<AppStoreApplicationInfo> appStoreApplicationInfoList;
-    List<PlayStoreApplicationInfo> playStoreApplicationInfoList;
+//    List<PlayStoreApplicationInfo> playStoreApplicationInfoList;
 
     @PostConstruct
     public void initialization() {
         log.info("Initialization");
+        newVersionEventProducer.createNewVersionEvent("test", "test");
 
         //Mongeez remembers its actions and executes only new scripts,
         //so, we shouldn't worry about duplications
@@ -79,10 +88,10 @@ public class ScheduledTasks {
         mongeez.process();
 
         appStoreApplicationInfoList = appStoreRepository.findAll();
-        playStoreApplicationInfoList = playStoreRepository.findAll();
+//        playStoreApplicationInfoList = playStoreRepository.findAll();
     }
 
-    @Scheduled(cron="0 0/5 6-23,0 * * MON-SAT")
+    @Scheduled(cron="${version.refresh.cron}")
     public void appStoreSchedule() {
         if(appStoreApplicationInfoList.size()==0){
             appStoreApplicationInfoList = appStoreRepository.findAll();
@@ -96,19 +105,19 @@ public class ScheduledTasks {
         appStoreApplicationInfoList = appStoreRepository.findAll();
     }
 
-    @Scheduled(cron="0 0/2 6-23,0 * * MON-SAT")
-    public void playStoreSchedule() {
-        if(playStoreApplicationInfoList.size()==0){
-            playStoreApplicationInfoList = playStoreRepository.findAll();
-        }
-
-        for (BaseApplicationInfo appItem : playStoreApplicationInfoList) {
-            checkForNewVersion(playStoreRepository, appItem, false);
-        }
-
-        //refresh appList
-        playStoreApplicationInfoList = playStoreRepository.findAll();
-    }
+//    @Scheduled(cron="0 0/2 6-23,0 * * MON-SAT")
+//    public void playStoreSchedule() {
+//        if(playStoreApplicationInfoList.size()==0){
+//            playStoreApplicationInfoList = playStoreRepository.findAll();
+//        }
+//
+//        for (BaseApplicationInfo appItem : playStoreApplicationInfoList) {
+//            checkForNewVersion(playStoreRepository, appItem, false);
+//        }
+//
+//        //refresh appList
+//        playStoreApplicationInfoList = playStoreRepository.findAll();
+//    }
 
     private void checkForNewVersion(ApplicationInfoRepository repository,
                                     BaseApplicationInfo appItem, boolean sendEmail) {

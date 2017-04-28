@@ -29,4 +29,10 @@
             "name" : "YouDrive Android", "url" : "https://play.google.com/store/apps/details?id=youdrive.today"});
         </script>
     </changeSet>
+    <changeSet changeId="ChangeSet-7" author="gkhotyan">
+        <script>
+            db.application_info.insert({
+            "name" : "UberEats", "url" : "https://itunes.apple.com/ru/app/ubereats-uber-for-food-delivery/id1058959277"});
+        </script>
+    </changeSet>
 </mongoChangeLog>

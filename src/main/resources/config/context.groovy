@@ -1,6 +1,7 @@
 package config
 
 import factories.PageParserBeanFactory
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
@@ -11,6 +12,8 @@ YamlPropertiesFactoryBean ymlProperties = new YamlPropertiesFactoryBean()
 ymlProperties.setResources(new ClassPathResource('application.yml'))
 java.util.Properties properties = ymlProperties.getObject()
 def config = new ConfigSlurper().parse(properties)
+
+
 
 Resource mongeezConfig = new ClassPathResource('mongeez/mongeez.xml')
 

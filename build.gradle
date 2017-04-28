@@ -57,7 +57,10 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: '1.7.1'
     compile "org.codehaus.groovy:groovy-all:$groovyVersion"
 
+    compile group: 'org.assertj', name: 'assertj-core', version: '3.6.2'
+
     testCompile group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '1.50.5'
+
 }
 
 sourceSets {
@@ -83,11 +86,6 @@ sourceSets {
         }
     }
 
-    test {
-        groovy {
-            srcDirs = ['test/groovy']
-        }
-    }
 }
 
 sourceSets.main.java.srcDirs = []

@@ -24,3 +24,4 @@ spring:
           class: javax.net.ssl.SSLSocketFactory
           fallback: false
 
+version.refresh.cron: 0 0/1 6-23,0 * * MON-SAT
