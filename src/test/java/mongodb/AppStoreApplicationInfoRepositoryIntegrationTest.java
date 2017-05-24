@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.List;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AppStoreApplicationInfoRepositoryIntegrationTest {
     private static final String LOCALHOST = "127.0.0.1";
@@ -68,7 +69,6 @@ public class AppStoreApplicationInfoRepositoryIntegrationTest {
     public void tearDown() throws Exception {
         template.dropCollection(AppStoreApplicationInfo.class);
     }
-
 
     @Test
     public void testSave() {
