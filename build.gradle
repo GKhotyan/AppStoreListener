@@ -44,6 +44,10 @@ dependencies {
 
     compile "org.springframework:spring-context:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
+
+    compile "org.springframework.integration:spring-integration-core:$springVersion"
+    compile "org.springframework.integration:spring-integration-event:$springVersion"
+
     compile 'org.springframework.boot:spring-boot-starter:1.4.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '1.4.1.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '1.2.0.RELEASE'
@@ -51,6 +55,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.1.RELEASE'
     compile("org.springframework.boot:spring-boot-starter-security")
 
+    compile group: 'org.springframework.data', name: 'spring-data-rest-core', version: '2.5.0.RELEASE'
 
 //    compile group: 'org.springframework', name: 'spring-aop', version: '4.3.6.RELEASE'
 //    compile group: 'aopalliance', name: 'aopalliance', version: '1.0'

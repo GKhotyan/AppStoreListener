@@ -12,6 +12,7 @@ import db.entities.AppStoreApplicationInfo;
 import db.repositories.ApplicationInfoRepository;
 import db.repositories.PlayStoreApplicationInfoRepository;
 import db.repositories.AppStoreApplicationInfoRepository;
+import events.NewVersionEvent;
 import events.NewVersionEventProducer;
 import factories.PageParserBeanFactory;
 import org.mongeez.Mongeez;
@@ -80,7 +81,14 @@ public class ScheduledTasks {
     @PostConstruct
     public void initialization() {
         log.info("Initialization");
-        newVersionEventProducer.createNewVersionEvent("test", "test");
+        try {
+            newVersionEventProducer.createNewVersionEvent("test", "test");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+//        NewVersionEvent newVersionEvent = new NewVersionEvent(this);
+//        newVersionEvent.setVersion("1111111");
+//        publisher.publishEvent(newVersionEvent);
 
         //Mongeez remembers its actions and executes only new scripts,
         //so, we shouldn't worry about duplications
